@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<struts>
+    <package name="default" extends="struts-default">
+        <!-- Action 配置 -->
+        <action name="index" class="com.example.IndexAction">
+            <result name="success">/WEB-INF/jsp/index.jsp</result>
+        </action>
+
+        <!-- Action 配置（表单提交） -->
+        <action name="submit" class="com.example.IndexAction">
+            <result name="success">/WEB-INF/jsp/submit.jsp</result>
+        </action>
+    </package>
+</struts>

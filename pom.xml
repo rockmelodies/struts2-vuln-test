@@ -1,23 +1,49 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
+  <!-- 项目信息 -->
   <groupId>com.example</groupId>
   <artifactId>struts2-vuln-test</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>struts2-vuln Maven Webapp</name>
+  <name>struts2-vuln-test Maven Webapp</name>
   <url>http://maven.apache.org</url>
+
+  <!-- 依赖项 -->
   <dependencies>
+    <!-- Struts2 Core -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
+      <groupId>org.apache.struts</groupId>
+      <artifactId>struts2-core</artifactId>
+      <version>6.3.0.2</version> <!-- 使用你指定的 Struts2 漏洞版本 -->
     </dependency>
+
+    <!-- Servlet API (提供的作用域) -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>4.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- JSP API (提供的作用域) -->
+    <dependency>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>javax.servlet.jsp-api</artifactId>
+      <version>2.3.3</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- 其他依赖项 -->
   </dependencies>
+
+  <!-- 构建部分 -->
   <build>
-    <finalName>struts2-vuln-test</finalName>
     <plugins>
+      <!-- Maven War Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
@@ -25,5 +51,5 @@
       </plugin>
     </plugins>
   </build>
-</project>
 
+</project>
