@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<struts>
+    <!-- Define a default package -->
+    <package name="default" extends="struts-default">
+        <!-- Action mapping -->
+        <action name="hello" class="com.example.HelloAction">
+            <result>/WEB-INF/jsp/hello.jsp</result>
+        </action>
+    </package>
+</struts>
