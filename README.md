@@ -1,83 +1,64 @@
-# struts2-vuln-test
+# Struts2 Vulnerability Test Project
 
+This is a sample Struts2 vulnerability testing project, designed to demonstrate potential security issues within Struts2 version 6.3.0.2. The project is set up to use Struts2's `.action` route and basic JSP pages.
 
+## Project Setup
 
-`mvn archetype:generate -DgroupId=com.example -DartifactId=struts2-vuln -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
-`
+### Prerequisites
 
-#### 解释：
--DgroupId=com.example：设置项目的 groupId，这是 Maven 项目的唯一标识符，通常是你公司或组织的域名反转形式。
--DartifactId=struts2-vuln：设置项目的 artifactId，即项目的名称。
--DarchetypeArtifactId=maven-archetype-webapp：指定项目使用的 Maven archetype（项目模板），这里是 Web 应用程序模板。
--DinteractiveMode=false：关闭交互式模式，避免 Maven 提示你输入项目信息（如 groupId、artifactId 等）。
+- **Java**: JDK 8 or above
+- **Maven**: 3.0 or above
+- **IDE**: IntelliJ IDEA, Eclipse, or any IDE that supports Maven-based Java projects.
+- **Tomcat**: Optional (if you choose to run on a standalone Tomcat server)
 
-#### 运行结果：
-该命令会生成一个基本的 Web 项目结构，你可以进一步在此基础上添加 Struts2 相关配置和依赖。
+### Installation
 
-完成命令后，你应该会在当前目录下看到一个名为 struts2-vuln 的文件夹，其中包含项目结构。你可以进入该目录并开始添加 Struts2 的相关配置。
+1. **Clone the repository**:
+    ```bash
+    git clone https://github.com/yourusername/struts2-vuln-test.git
+    ```
 
-在完成了通过 Maven 创建项目并添加 Struts2 依赖后，接下来是配置和启动你的 Struts2 项目。以下是启动项目的步骤。
+2. **Navigate to the project directory**:
+    ```bash
+    cd struts2-vuln-test
+    ```
 
-步骤 1: 配置 web.xml
-Struts2 项目需要在 web.xml 文件中配置相关的过滤器和监听器，确保 Struts2 的框架可以正常工作。
+3. **Build the project with Maven**:
+    ```bash
+    mvn clean install
+    ```
 
-在 src/main/webapp/WEB-INF/web.xml 文件中，添加以下内容：
+4. **Run the project**:
+   You can run the project either with an embedded Tomcat server (via Spring Boot) or deploy it to a standalone Tomcat server.
 
-```xml 
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-                             http://java.sun.com/xml/ns/javaee/web-app_3_1.xsd"
-         version="3.1">
+    - If you want to run it with **Tomcat**, build the project and deploy the `.war` file into your Tomcat `webapps` folder:
+      ```bash
+      mvn clean package
+      # Copy the generated .war file to Tomcat's webapps folder
+      ```
 
-    <!-- Struts2 Filter -->
-    <filter>
-        <filter-name>struts2</filter-name>
-        <filter-class>org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>struts2</filter-name>
-        <url-pattern>/</url-pattern>
-    </filter-mapping>
+    - If using **Spring Boot** to run an embedded Tomcat server, configure your `application.properties` file for embedded configuration (optional).
 
-</web-app>
-```
+### Project Structure
 
-StrutsPrepareAndExecuteFilter 是 Struts2 的核心过滤器，它处理请求并分发到适当的 Action。
+- **struts.xml**: Contains action mappings and configurations for the Struts2 framework.
+- **WEB-INF/jsp/**: Contains JSP pages for the views.
+- **src/main/java**: Contains Java classes for actions.
 
-步骤 2: 配置 struts.xml
-你还需要在 src/main/resources 目录下创建 struts.xml 配置文件，这个文件是 Struts2 框架的核心配置文件，用来定义 Action 类和视图等。
+### Example Action
 
-创建一个 struts.xml 文件，内容如下：
+The project uses **Struts2 Action** to handle requests and map them to views.
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<struts>
-    <!-- Define a default package -->
-    <package name="default" extends="struts-default">
-        <!-- Action mapping -->
-        <action name="hello" class="com.example.HelloAction">
-            <result>/WEB-INF/jsp/hello.jsp</result>
-        </action>
-    </package>
-</struts>
-```
-package 标签：定义了一个默认的包（default），它继承了 Struts2 默认的配置。
-action 标签：定义了一个名为 hello 的 Action，类 com.example.HelloAction 和对应的视图 hello.jsp。
+#### `IndexAction.java`
 
-步骤 3: 创建 Action 类
-在 src/main/java/com/example 目录下创建一个名为 HelloAction.java 的类：
 ```java
-package com.example;
-
-import com.opensymphony.xwork2.ActionSupport;
-
-public class HelloAction extends ActionSupport {
-
+@Action(value = "index", results = {
+    @Result(name = "success", location = "/WEB-INF/jsp/index.jsp")
+})
+public class IndexAction extends ActionSupport {
     private String message;
 
-    @Override
-    public String execute() throws Exception {
+    public String execute() {
         message = "Hello, Struts2!";
         return SUCCESS;
     }
@@ -87,73 +68,100 @@ public class HelloAction extends ActionSupport {
     }
 }
 ```
-HelloAction 类继承自 ActionSupport 类，表示这是一个 Struts2 的 Action 类。
-execute() 方法返回 SUCCESS，表示 Action 执行成功，并传递 message 数据到 JSP 页面。
 
-步骤 4: 创建 JSP 页面
-在 src/main/webapp/WEB-INF/jsp/ 目录下创建一个 hello.jsp 页面，内容如下：
+```xml
+<struts>
+    <package name="default" extends="struts-default">
+        <action name="index" class="com.example.IndexAction">
+            <result name="success">/WEB-INF/jsp/index.jsp</result>
+        </action>
+    </package>
+</struts>
+```
 
 ```jsp
-<%@ taglib uri="/struts-tags" prefix="s" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
-<head><title>Hello Struts2</title></head>
-<body>
-    <h1>${message}</h1>
-</body>
+  <body>
+    <h1>${message}</h1> <!-- Using Expression Language (EL) -->
+  </body>
 </html>
 ```
-该 JSP 页面通过 ${message} 显示从 Action 类传递过来的 message 数据。
+Dependencies
+The following dependencies are used in the project:
 
-步骤 5: 使用 Maven 构建项目
-现在你已经完成了配置，可以使用 Maven 构建项目。
+Struts2 Core: Version 6.3.0.2 (specified version)
+Servlet API: Version 4.0.1
+JSP API: Version 2.3.3
+If you're not using JSTL, you can omit it from the project dependencies.
 
-```java
-mvn clean install
-```
-这将构建项目并下载所需的依赖项。
-
-步骤 6: 配置 Tomcat 启动
-你可以使用 Tomcat 来运行这个项目。假设你已经安装了 Tomcat，你需要将项目打包为 .war 文件并将其部署到 Tomcat 中。
-
-a. 修改 pom.xml 文件，确保使用 maven-war-plugin 来构建 .war 文件：
+pom.xml Configuration
+Here is the configuration for the pom.xml to work with Struts2:
 
 ```java
-<build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <version>3.3.1</version>
-        </plugin>
-    </plugins>
-</build>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.example</groupId>
+    <artifactId>struts2-vuln-test</artifactId>
+    <packaging>war</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>struts2-vuln-test Maven Webapp</name>
+    <url>http://maven.apache.org</url>
+
+    <dependencies>
+        <!-- Struts2 Core -->
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-core</artifactId>
+            <version>6.3.0.2</version>
+        </dependency>
+
+        <!-- Servlet API -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JSP API -->
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <version>2.3.3</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Maven War Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.1</version>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
 ```
-b. 打包项目：
-使用 Maven 打包项目：
 
-```mvn clean package
-```
+Security Note
+This project is intentionally configured with Struts2 6.3.0.2, which contains known vulnerabilities. Please be cautious when using this version in any production environment. This version is for testing and educational purposes only.
 
-这会生成一个 struts2-vuln.war 文件，位于 target 目录下。
+Additional Information
+Struts2 Vulnerability: This version contains vulnerabilities like OGNL injection, which is a known security risk. Make sure to only use it in a controlled environment.
 
-c. 部署到 Tomcat：
-将 struts2-vuln.war 文件复制到 Tomcat 的 webapps 目录。
-启动 Tomcat。
-访问 http://localhost:8080/struts2-vuln/hello.action 来测试项目。
 
-步骤 7: 测试
-在浏览器中访问：
+### 说明
 
-`
-http://localhost:8080/struts2-vuln/hello.action
-`
-如果一切配置正确，你应该会看到页面显示：
+1. **项目概述**：简要介绍了项目用途以及为什么使用特定版本的 **Struts2**。并且明确声明该项目用于测试漏洞，因此应小心使用。
+2. **依赖说明**：列出了项目所依赖的 Maven 包，包括 **Struts2 Core**, **Servlet API**, 和 **JSP API** 等。
+3. **配置示例**：包含了基本的 **Action** 类、**struts.xml** 配置以及 **JSP** 页面样例，演示了如何通过 `.action` 路由进行请求处理。
+4. **安全提醒**：提醒使用者该版本存在已知的漏洞，应该仅在受控环境中进行使用。
+5. **构建与启动**：提供了详细的构建和运行步骤，帮助用户从拉取代码到运行项目。
 
-Hello, Struts2!
-
-总结：
-配置 web.xml 和 struts.xml。
-创建 Action 类和对应的 JSP 页面。
-使用 Maven 构建并打包项目。
-将项目部署到 Tomcat 并启动。
-通过以上步骤，你就能够启动一个基本的 Struts2 项目，并通过浏览器访问它。
+希望这份 `README.md` 对你有所帮助！如果你有其他要求或修改，可以随时告诉我。
